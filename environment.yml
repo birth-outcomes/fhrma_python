@@ -1,0 +1,23 @@
+name: ctg
+channels:
+  - defaults
+  - conda-forge 
+dependencies:
+  - jupyter=1.0.0
+  - jupyterlab=3.6.3
+  - librosa=0.10.1
+  - matplotlib=3.7.2
+  - numpy=1.24.3
+  - pandas=2.0.3
+  - pip=23.2.1
+  - python=3.10
+  - scikit-learn=1.3.0
+  - pip:
+    - optuna==3.3.0
+    - peakutils==1.3.4
+    - pycwt==0.4.0b0
+    - pydot==1.4.2
+    - ssqueezepy==0.6.4
+    - tensorflow[and-cuda]
+    - wfdb==4.1.2
+    - sktime==0.23.0
