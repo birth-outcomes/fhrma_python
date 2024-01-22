@@ -1,6 +1,6 @@
 # Simple method for detection of accelerations and decelerations
 
-# Equivalent of FHRMA's detectaccident()
+# It is the equivalent of FHRMA's detectaccident()
 
 # Not presently incorporated the wrapper simpleadddetection() which runs
 # acceleration and deceleration detection, and false detection too, and returns
@@ -10,6 +10,11 @@
 # function - this function would take inputs of a (outcome of detectaccident())
 # and f (a rerun of detectaccident() but with a threshold of 5 instead of 15).
 # The function would then removes elements from f that are also in a.
+
+# Presently does includes a function to run this on all records and save in 
+# a dataframe along with the equivalent FHRMA results. This function is
+# create_accident_df().
+
 
 import numpy as np
 import pandas as pd
@@ -90,5 +95,59 @@ def detect_accident(sig, thre):
 
     # Convert result to dataframe
     result = pd.DataFrame(res, columns=['start', 'end', 'max'])
+
+    return (result)
+
+
+def create_accident_df(raw_fhr, fhrma_base, fhrma_dict, type):
+    '''
+    Run the detect_accident function on all the FHR records, either detecting
+    accelerations or decelerations, creating a dataframe with the accidents.
+
+    Parameters:
+    -----------
+    raw_fhr : dictionary
+        Dictionary with the raw FHR (cleaned) for each record
+    fhrma_base : dictionary
+        Dictionary with the baseline FHR for each record
+    fhrma_dict : dictionary
+        Dictionary with either acceleration or deceleration results from FHRMA
+    type : string
+        Either 'acc' (accelerations) or 'dec' (decelerations)
+
+    Outputs:
+    --------
+    result: dataframe
+        Dataframe with accelerations or decelerations for each record, from
+        FHRMA and from Python function
+    '''
+    # Initialise list for storing results
+    res = []
+
+    # Loop through each of the FHR signals
+    for record, fhr in raw_fhr.items():
+
+        # Get baseline for that record
+        baseline = fhrma_base[record]
+
+        # Get results from FHRMA for that record
+        fhrma_res = fhrma_dict[record]
+
+        # Find accelerations or decelerations
+        if type == 'acc':
+            python_res = detect_accident(
+                fhr-baseline, 15)[['start', 'end']].to_numpy()
+        elif type == 'dec':
+            python_res = detect_accident(
+                baseline-fhr, 15)[['start', 'end']].to_numpy()
+
+        # Check if all the elements match
+        match = np.array_equal(fhrma_res, python_res)
+
+        # Store in results
+        res.append([record, fhrma_res, python_res, match])
+    
+    # Convert to dataframe
+    result = pd.DataFrame(res, columns=['record', 'fhrma', 'python', 'match'])
 
     return (result)
