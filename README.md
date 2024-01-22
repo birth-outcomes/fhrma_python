@@ -12,27 +12,44 @@ Refer to `03_literature_review` in the `ctg_exploratory` repository for some of 
 
 ## Context - FHR baseline
 
-The FHR baseline is defined as the **mean of the signal after accelerations and decelerations have been excluded**. It is challenging to define a method for determining the FHR baseline because:
+Definition from the [FIGO guidelines](https://doi.org/10.1016/j.ijgo.2015.06.020): "This is the mean level of the most horizontal and less oscillatory FHR segments. It is estimated in time periods of 10 minutes and expressed in beats per minute (bpm). The baseline value may vary between subsequent 10-minute sections."
+
+Definition from the [NICE guidelines](https://www.nice.org.uk/guidance/ng229/chapter/Recommendations): "Determine baseline fetal heart rate by looking at the mean fetal heart rate, excluding accelerations and decelerations, over a period of 10 minutes when the fetal heart rate is stable. When deciding if there is any change in baseline fetal heart rate, compare it with earlier CTG traces or recordings of fetal heart rate."
+
+It is challenging to define a method for determining the FHR baseline because:
 * It has a circular definition, as accelerations and decelerations are defined as periods when the signal is consistently above or below the baseline.
 * There is high variability in some recordings, making it hard to distinguish between change in the baseline, and an acceleration or deceleration.[[source]](https://doi.org/10.3389/fped.2023.1190441)
 
-M'Barek et al. 2023 state that you can overcome this issue by calibrating your method on baselines, accelerations and decelerations annotated by a consensus of obstetricians (they use those on the FHRMA dataset).[[source]](https://doi.org/10.3389/fped.2023.1190441)
+M'Barek et al. 2023 state that you can overcome this issue by calibrating your method on baselines, accelerations and decelerations annotated by a consensus of obstetricians (they use those on the FHRMA dataset).[[source]](https://doi.org/10.3389/fped.2023.1190441) [Wróbel et al. 2013](https://doi.org/10.1016/j.bbe.2013.09.004) explain how [Bernardes et al. 1996](https://doi.org/10.1111/j.1471-0528.1996.tb09844.x) "proposed to use additional information obtained from uterine contraction or fetal movement activity signals for removal particular signal segments from baseline calculation. However, significant subjectivity and high dependency on a signal recordings quality (using popular bedside monitors) are limiting this approach."
 
 The FHRMA toolbox contains a range of published methods for FHR baseline calculation implemented within MATLAB.
 
 ## FHRMA (Fetal Heart Rate Morphological Analysis)
 
-**Description:**
+**Key sources:**
 
-Source: https://github.com/utsb-fmm/FHRMA/tree/master
+* [FHRMA github](https://github.com/utsb-fmm/FHRMA)
+* [FHRMA wiki](https://github.com/utsb-fmm/FHRMA/wiki).
+* Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Delgranche, A., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Fetal heart rate signal dataset for training morphological analysis methods and evaluating them against an expert consensus. Preprints pp. Submitted to data in brief,2019, DOI:10.20944/preprints201907.0039.v1
 
-License: GPL-3.0
+**License:**
+
+License: GPL-3.0. As from [this summary](https://gist.github.com/kn9ts/cbe95340d29fc1aaeaa5dd5c059d2e60), this license means:
+1. Anyone can copy, modify and distribute this software.
+2. You have to include the license and copyright notice with each and every distribution.
+3. You can use this software privately.
+4. You can use this software for commercial purposes.
+5. If you dare build your business solely from this code, you risk open-sourcing the whole code base.
+6. If you modify it, you have to indicate changes made to the code.
+7. Any modifications of this code base MUST be distributed with the same license, GPLv3.
+8. This software is provided without warranty.
+9. The software author or license can not be held liable for any damages inflicted by the software.  
+
+**Summary:**
 
 The dataset contains 155 FHR recordings in which a reference baseline, accelerations and decelerations have been annotated by expert consensus. 66 FHR recordings with a shared expert analysis have been included in a training dataset, and 90 other FHR recordings with a non-shared expert analysis have been included in an evaluation dataset. The dataset also contains the results produced by 12 re-coded automatic analysis methods from the literature.
 
-Main information are published in : [1] Boudet, S., Houzé de l’Aulnoit, A., Demailly, R., Delgranche, A., Peyrodie, L., Beuscart, R., Houzé de l’Aulnoit,D. - Fetal heart rate signal dataset for training morphological analysis methods and evaluating them against an expert consensus. Preprints pp. Submitted to data in brief,2019, DOI:10.20944/preprints201907.0039.v1
-
-There is an [FHRMA github](https://github.com/utsb-fmm/FHRMA) and [FHRMA wiki](https://github.com/utsb-fmm/FHRMA/wiki).
+**Description:**
 
 The raw FHR records are available for the [training](https://github.com/utsb-fmm/FHRMA/tree/master/FHRMAdataset/traindata) and [test](https://github.com/utsb-fmm/FHRMA/tree/master/FHRMAdataset/testdata) data. These are .fhr files which can be opened with the fhropen.m function in MATLAB. They were sampled at 4Hz. For each sample, a uint32 serves as the UNIX timestamp for the beginning of the recording. Next, a uint16 corresponds to the FHR from the first sensor (multiplied by 4), a uint16 for the FHR signal from the second sensor (multiplied by 4) (unused here), a uint8 for the TOCO signal (multiplied by 2), and a uint8 reserved to store signal quality (unused here). 
 
